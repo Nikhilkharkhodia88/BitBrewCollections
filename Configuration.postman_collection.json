@@ -1,0 +1,2464 @@
+{
+	"info": {
+		"_postman_id": "1dc8927e-705a-40d0-b395-383eaf0944ac",
+		"name": "Configuration",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create folder",
+			"item": [
+				{
+					"name": "TC_N-01 | Configuration | User login| It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ed14407a-1f47-40e3-9686-55e99d3834b9",
+								"exec": [
+									"if (responseCode.code == 200)\r",
+									"{\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+									"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"AccessToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Token Type must  be Bearer\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access Token should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"refreshToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\" refreshToken should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+									"    });\r",
+									"    pm.test(\" expiresTn should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+									"    });\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.response.to.have.status(200);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "grant_type",
+									"value": "{{Grant_type}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{clientId}}",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{superpassword}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"token"
+							]
+						},
+						"description": "Get Token when login with valid SuperAdmin credentials with token API"
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Get Tennant| It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0fbb180f-41f5-4da7-8e2b-2aaba05fd7a1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Tenant is enable/disable musbe in boolean object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].enabled).to.be.a('Boolean');",
+									"});",
+									"",
+									"",
+									"pm.test(\"TenantId must contain string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].name).to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tenant name must contai string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].properName).to.be.a('string');",
+									"});",
+									"/*pm.test(\"Tenant ingestionClusterId must contain Interger object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].ingestionClusterId).to.be.a('integer');",
+									"});*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/tenants",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"tenants"
+							]
+						},
+						"description": "If you want tenantid to run thr another api from teh collection you can get the tenantid for the particular tenant from this list and pass it to the environment variable.\nNote:Here tenant id is \"name\""
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Create Folder| It should show 201 status",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4780ea80-bf40-453e-9854-936242583e8c",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "d6037529-087a-4a5f-821b-e4e93ddaeb42",
+								"exec": [
+									"if (responseCode.code == 201)\r",
+									"{\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"    pm.test(\"Status code is 201\", function(){\r",
+									"    pm.response.to.have.status(201)\r",
+									"});\r",
+									"    \r",
+									"pm.test(\"activeFileName should be contain  null \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.activeFileName).to.eql(null);\r",
+									"});\r",
+									"pm.test(\"activeVersion should be contain  null \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.activeVersion).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"name should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.name).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"error should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.error).not.eql(null);\r",
+									"});\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 400\", function () {\r",
+									"        pm.response.to.have.status(400);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\": \"{{name}}\" }"
+						},
+						"url": {
+							"raw": "{{protocol}}{{URL1}}{{port}}/v1/tenants/production/configurationFolders",
+							"host": [
+								"{{protocol}}{{URL1}}{{port}}"
+							],
+							"path": [
+								"v1",
+								"tenants",
+								"production",
+								"configurationFolders"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Create folder with empty name field",
+			"item": [
+				{
+					"name": "TC_N-01 | Configuration | User login| It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4de02166-b81b-4ec5-a7ca-a24d08bc9204",
+								"exec": [
+									"if (responseCode.code == 200)\r",
+									"{\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+									"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"AccessToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Token Type must  be Bearer\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access Token should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"refreshToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\" refreshToken should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+									"    });\r",
+									"    pm.test(\" expiresTn should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+									"    });\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.response.to.have.status(200);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "grant_type",
+									"value": "{{Grant_type}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{clientId}}",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{superpassword}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"token"
+							]
+						},
+						"description": "Get Token when login with valid SuperAdmin credentials with token API"
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Get Tennant| It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b5210042-9207-46c8-b281-482ee1a2ca58",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Tenant is enable/disable musbe in boolean object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].enabled).to.be.a('Boolean');",
+									"});",
+									"",
+									"",
+									"pm.test(\"TenantId must contain string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].name).to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tenant name must contai string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].properName).to.be.a('string');",
+									"});",
+									"/*pm.test(\"Tenant ingestionClusterId must contain Interger object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].ingestionClusterId).to.be.a('integer');",
+									"});*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/tenants",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"tenants"
+							]
+						},
+						"description": "If you want tenantid to run thr another api from teh collection you can get the tenantid for the particular tenant from this list and pass it to the environment variable.\nNote:Here tenant id is \"name\""
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Create folder with empty name field| It should show 404 status",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "02f40792-a250-40a4-aeaa-0207ad0234b5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1f82b476-8659-4fe5-96a6-564ffd2defc3",
+								"exec": [
+									"if (responseCode.code == 201)\r",
+									"{\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"    pm.test(\"Status code is 201\", function(){\r",
+									"    pm.response.to.have.status(201)\r",
+									"});\r",
+									"    \r",
+									"pm.test(\"activeFileName should be contain  null \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.activeFileName).to.eql(null);\r",
+									"});\r",
+									"pm.test(\"activeVersion should be contain  null \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.activeVersion).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"name should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.name).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"error should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.error).not.eql(null);\r",
+									"});\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 400\", function () {\r",
+									"        pm.response.to.have.status(400);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\": \"{{name}}\" }"
+						},
+						"url": {
+							"raw": "{{protocol}}{{URL1}}{{port}}/v1/tenants/production/configurationFolders",
+							"host": [
+								"{{protocol}}{{URL1}}{{port}}"
+							],
+							"path": [
+								"v1",
+								"tenants",
+								"production",
+								"configurationFolders"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "\"1. Select the valid Tenant\r\n2. Click on \"\"Folder\"\" option \r\n3. Donot enter any Folder name \r\n4. Click on \"\"Create Folder\"\"\"\r\n",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "72935765-c8b7-4fb8-8823-a0ffff3df39e",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "27ee9f83-29d8-46a6-b778-317545e53f74",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Create folder with numeric numbers",
+			"item": [
+				{
+					"name": "TC_N-01 | Configuration | User login| It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "848f3dcc-5b64-462b-bc99-44dcf62b6bb3",
+								"exec": [
+									"if (responseCode.code == 200)\r",
+									"{\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+									"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"AccessToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Token Type must  be Bearer\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access Token should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"refreshToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\" refreshToken should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+									"    });\r",
+									"    pm.test(\" expiresTn should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+									"    });\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.response.to.have.status(200);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "grant_type",
+									"value": "{{Grant_type}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{clientId}}",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{superpassword}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"token"
+							]
+						},
+						"description": "Get Token when login with valid SuperAdmin credentials with token API"
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Get Tennant| It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "425ce6b2-615f-49c4-a5a5-4498e3d18b0e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Tenant is enable/disable musbe in boolean object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].enabled).to.be.a('Boolean');",
+									"});",
+									"",
+									"",
+									"pm.test(\"TenantId must contain string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].name).to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tenant name must contai string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].properName).to.be.a('string');",
+									"});",
+									"/*pm.test(\"Tenant ingestionClusterId must contain Interger object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].ingestionClusterId).to.be.a('integer');",
+									"});*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/tenants",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"tenants"
+							]
+						},
+						"description": "If you want tenantid to run thr another api from teh collection you can get the tenantid for the particular tenant from this list and pass it to the environment variable.\nNote:Here tenant id is \"name\""
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Create Folder| It should show 201 status",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "debbc174-dc3a-4de6-a319-ea35c088c744",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0917a25f-9ebb-4093-a0b1-7e401e73c633",
+								"exec": [
+									"if (responseCode.code == 201)\r",
+									"{\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"    pm.test(\"Status code is 201\", function(){\r",
+									"    pm.response.to.have.status(201)\r",
+									"});\r",
+									"    \r",
+									"pm.test(\"activeFileName should be contain  null \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.activeFileName).to.eql(null);\r",
+									"});\r",
+									"pm.test(\"activeVersion should be contain  null \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.activeVersion).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"name should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.name).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"error should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.error).not.eql(null);\r",
+									"});\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 400\", function () {\r",
+									"        pm.response.to.have.status(400);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\": \"{{name}}\" }"
+						},
+						"url": {
+							"raw": "{{protocol}}{{URL1}}{{port}}/v1/tenants/production/configurationFolders",
+							"host": [
+								"{{protocol}}{{URL1}}{{port}}"
+							],
+							"path": [
+								"v1",
+								"tenants",
+								"production",
+								"configurationFolders"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "\"1 Select the valid Tenant \r\n2. Click on \"\"Folder\"\" option\r\n3. Enter Folder name with numeric numbers\r\n4. Click on \"\"Create Folder\"\"\"\r\n",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d2a0d20e-9969-49ea-a86c-e98a21e46a02",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "6501f7fc-633d-429f-af2c-779d1367115d",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Create duplicate folder",
+			"item": [
+				{
+					"name": "TC_N-01 | Configuration | LoginUser | It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c858ce71-61fc-425f-9b76-29feda08b0e8",
+								"exec": [
+									"if (responseCode.code == 200)\r",
+									"{\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+									"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"AccessToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Token Type must  be Bearer\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access Token should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"refreshToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\" refreshToken should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+									"    });\r",
+									"    pm.test(\" expiresTn should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+									"    });\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.response.to.have.status(200);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "grant_type",
+									"value": "{{Grant_type}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{clientId}}",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{superpassword}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"token"
+							]
+						},
+						"description": "Get Token when login with valid SuperAdmin credentials with token API"
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Get Tennant| It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4cc3c89d-13c0-440b-bdd7-c9c656661e93",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Tenant is enable/disable musbe in boolean object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].enabled).to.be.a('Boolean');",
+									"});",
+									"",
+									"",
+									"pm.test(\"TenantId must contain string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].name).to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tenant name must contai string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].properName).to.be.a('string');",
+									"});",
+									"/*pm.test(\"Tenant ingestionClusterId must contain Interger object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].ingestionClusterId).to.be.a('integer');",
+									"});*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/tenants",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"tenants"
+							]
+						},
+						"description": "If you want tenantid to run thr another api from teh collection you can get the tenantid for the particular tenant from this list and pass it to the environment variable.\nNote:Here tenant id is \"name\""
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Create duplicate folder| It should show 409 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51dcad9a-1192-4b66-a9e3-6d5ec65ddb83",
+								"exec": [
+									"if (responseCode.code == 409)\r",
+									"{\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"    pm.test(\"Status code is 409\", function(){\r",
+									"    pm.response.to.have.status(409)\r",
+									"});\r",
+									"    \r",
+									"pm.test(\"code should be contain  folderExists \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.code).to.eql(\"folderExists\");\r",
+									"});\r",
+									"pm.test(\"message should be contain  A folder already exists with that name \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"A folder already exists with that name\");\r",
+									"});\r",
+									"\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 400\", function () {\r",
+									"        pm.response.to.have.status(400);\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\": \"BitbrewTenant219\" }"
+						},
+						"url": {
+							"raw": "{{protocol}}api-default.test.bitbrew.com:{{port}}/v1/tenants/production/configurationFolders",
+							"host": [
+								"{{protocol}}api-default",
+								"test",
+								"bitbrew",
+								"com"
+							],
+							"port": "{{port}}",
+							"path": [
+								"v1",
+								"tenants",
+								"production",
+								"configurationFolders"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Create folder with special characters name",
+			"item": [
+				{
+					"name": "TC_N-01 | Configuration | LoginUser | It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cb442c2c-a36a-4590-b57d-2453aed01cae",
+								"exec": [
+									"if (responseCode.code == 200)\r",
+									"{\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+									"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"AccessToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Token Type must  be Bearer\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access Token should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"refreshToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\" refreshToken should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+									"    });\r",
+									"    pm.test(\" expiresTn should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+									"    });\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.response.to.have.status(200);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "grant_type",
+									"value": "{{Grant_type}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{clientId}}",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{superpassword}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"token"
+							]
+						},
+						"description": "Get Token when login with valid SuperAdmin credentials with token API"
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Get Tennant| It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "df72ac2f-19b0-4b70-9a1b-7501207aa354",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Tenant is enable/disable musbe in boolean object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].enabled).to.be.a('Boolean');",
+									"});",
+									"",
+									"",
+									"pm.test(\"TenantId must contain string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].name).to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tenant name must contai string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].properName).to.be.a('string');",
+									"});",
+									"/*pm.test(\"Tenant ingestionClusterId must contain Interger object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].ingestionClusterId).to.be.a('integer');",
+									"});*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/tenants",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"tenants"
+							]
+						},
+						"description": "If you want tenantid to run thr another api from teh collection you can get the tenantid for the particular tenant from this list and pass it to the environment variable.\nNote:Here tenant id is \"name\""
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Create folder with special characters| It should show 201 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "248ac4f4-72c7-4d6e-a6da-38a25b61748c",
+								"exec": [
+									"if (responseCode.code == 201)\r",
+									"{\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"    pm.test(\"Status code is 201\", function(){\r",
+									"    pm.response.to.have.status(201)\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"specialName\", jsonData.name);\r",
+									"\r",
+									"\r",
+									"});\r",
+									"    \r",
+									"pm.test(\"activeFileName should be contain  null \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.activeFileName).to.eql(null);\r",
+									"});\r",
+									"pm.test(\"activeVersion should be contain  null \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.activeVersion).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"name should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.name).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"error should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.error).not.eql(null);\r",
+									"});\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 400\", function () {\r",
+									"        pm.response.to.have.status(400);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\": \"{{awb}}\" }"
+						},
+						"url": {
+							"raw": "{{protocol}}{{URL1}}{{port}}/v1/tenants/production/configurationFolders",
+							"host": [
+								"{{protocol}}{{URL1}}{{port}}"
+							],
+							"path": [
+								"v1",
+								"tenants",
+								"production",
+								"configurationFolders"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "1.Login into the bitbrew valid username and password.\r\n2. Select the valid Tenant \r\n3. Click on \"\"Folder\"\" option\r\n4. Enter Folder name with special characters\r\n5. Click on \"\"Create Folder\"\"\"\r\n",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ea2adcd4-a217-4e37-b61a-175322fe12d9",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "36450ae5-32e6-4d5f-86e9-934ac5c50777",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Delete folder with special characters name",
+			"item": [
+				{
+					"name": "TC_N-01 | Configuration | LoginUser | It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "79d466b3-6f36-49a4-8e54-5610a7a7cad5",
+								"exec": [
+									"if (responseCode.code == 200)\r",
+									"{\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+									"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"AccessToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Token Type must  be Bearer\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access Token should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"refreshToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\" refreshToken should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+									"    });\r",
+									"    pm.test(\" expiresTn should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+									"    });\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.response.to.have.status(200);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "grant_type",
+									"value": "{{Grant_type}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{clientId}}",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{superpassword}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"token"
+							]
+						},
+						"description": "Get Token when login with valid SuperAdmin credentials with token API"
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Get Tennant| It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "698c77ba-2841-4626-b204-c57c65a49eca",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Tenant is enable/disable musbe in boolean object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].enabled).to.be.a('Boolean');",
+									"});",
+									"",
+									"",
+									"pm.test(\"TenantId must contain string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].name).to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tenant name must contai string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].properName).to.be.a('string');",
+									"});",
+									"/*pm.test(\"Tenant ingestionClusterId must contain Interger object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].ingestionClusterId).to.be.a('integer');",
+									"});*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/tenants",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"tenants"
+							]
+						},
+						"description": "If you want tenantid to run thr another api from teh collection you can get the tenantid for the particular tenant from this list and pass it to the environment variable.\nNote:Here tenant id is \"name\""
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration |Delete Folder with special character name | It should show 201 status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\": \"@#$%%%\" }"
+						},
+						"url": {
+							"raw": "{{protocol}}api-default.test.bitbrew.com:{{port}}/v1/tenants/production/configurationFolders",
+							"host": [
+								"{{protocol}}api-default",
+								"test",
+								"bitbrew",
+								"com"
+							],
+							"port": "{{port}}",
+							"path": [
+								"v1",
+								"tenants",
+								"production",
+								"configurationFolders"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "\r\n\"1. Select the radio button of \"\"Folder Name\"\"\r\n2. Click on \"\"Delete Folder\"\" button\r\n3. Click on \"\"Delete Folder\"\" confirmation popup\"\r\n",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ee4c1eec-a9bd-40f2-92f4-339c64fdbbf7",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f1c53f85-f0ea-4659-be89-3e1aa2b03990",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Create folder without select Tenant",
+			"item": [
+				{
+					"name": "TC_N-01 | Configuration | LoginUser | It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5b8bdbaa-3483-415f-9c13-1bdd9bd00b14",
+								"exec": [
+									"if (responseCode.code == 200)\r",
+									"{\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+									"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"AccessToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Token Type must  be Bearer\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access Token should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"refreshToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\" refreshToken should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+									"    });\r",
+									"    pm.test(\" expiresTn should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+									"    });\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.response.to.have.status(200);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "grant_type",
+									"value": "{{Grant_type}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{clientId}}",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{superpassword}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"token"
+							]
+						},
+						"description": "Get Token when login with valid SuperAdmin credentials with token API"
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Get Tennant| It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dd27fe98-a6ef-430b-ab5e-ed1121b71b7e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Tenant is enable/disable musbe in boolean object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].enabled).to.be.a('Boolean');",
+									"});",
+									"",
+									"",
+									"pm.test(\"TenantId must contain string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].name).to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tenant name must contai string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].properName).to.be.a('string');",
+									"});",
+									"/*pm.test(\"Tenant ingestionClusterId must contain Interger object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].ingestionClusterId).to.be.a('integer');",
+									"});*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/tenants",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"tenants"
+							]
+						},
+						"description": "If you want tenantid to run thr another api from teh collection you can get the tenantid for the particular tenant from this list and pass it to the environment variable.\nNote:Here tenant id is \"name\""
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Create folder without select Tenant| It should show 409 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "765bb5cc-504a-401d-910e-be7d04652cf9",
+								"exec": [
+									"if (responseCode.code == 404)\r",
+									"{\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"    pm.test(\"Status code is 404\", function(){\r",
+									"    pm.response.to.have.status(404)\r",
+									"});\r",
+									"    \r",
+									"pm.test(\"code should be contain  notFound \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.code).to.eql(\"notFound\");\r",
+									"});\r",
+									"pm.test(\"message should be contain  Not found \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Not found\");\r",
+									"});\r",
+									"\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 400\", function () {\r",
+									"        pm.response.to.have.status(400);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\": \"cfgFolder\" }"
+						},
+						"url": {
+							"raw": "{{protocol}}{{URL1}}{{port}}/v1/tenants/{{random}}/configurationFolders",
+							"host": [
+								"{{protocol}}{{URL1}}{{port}}"
+							],
+							"path": [
+								"v1",
+								"tenants",
+								"{{random}}",
+								"configurationFolders"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Varify by upload file in folder",
+			"item": [
+				{
+					"name": "TC_N-01 | Configuration | LoginUser | It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "529400b9-96fa-4e9e-95f3-a471fdd40f4d",
+								"exec": [
+									"if (responseCode.code == 200)\r",
+									"{\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+									"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"AccessToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Token Type must  be Bearer\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access Token should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"refreshToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\" refreshToken should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+									"    });\r",
+									"    pm.test(\" expiresTn should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+									"    });\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.response.to.have.status(200);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "grant_type",
+									"value": "{{Grant_type}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{clientId}}",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{superpassword}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"token"
+							]
+						},
+						"description": "Get Token when login with valid SuperAdmin credentials with token API"
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Get Tennant| It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "edcdb44c-c688-4661-858d-78eb20642f93",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Tenant is enable/disable musbe in boolean object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].enabled).to.be.a('Boolean');",
+									"});",
+									"",
+									"",
+									"pm.test(\"TenantId must contain string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].name).to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tenant name must contai string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].properName).to.be.a('string');",
+									"});",
+									"/*pm.test(\"Tenant ingestionClusterId must contain Interger object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].ingestionClusterId).to.be.a('integer');",
+									"});*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/tenants",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"tenants"
+							]
+						},
+						"description": "If you want tenantid to run thr another api from teh collection you can get the tenantid for the particular tenant from this list and pass it to the environment variable.\nNote:Here tenant id is \"name\""
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Create folder without select Tenant| It should show 409 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1a6063e3-efa4-43a0-83f2-9ac5ef4a713c",
+								"exec": [
+									"if (responseCode.code == 404)\r",
+									"{\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"    pm.test(\"Status code is 404\", function(){\r",
+									"    pm.response.to.have.status(404)\r",
+									"});\r",
+									"    \r",
+									"pm.test(\"code should be contain  notFound \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.code).to.eql(\"notFound\");\r",
+									"});\r",
+									"pm.test(\"message should be contain  Not found \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Not found\");\r",
+									"});\r",
+									"\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 400\", function () {\r",
+									"        pm.response.to.have.status(400);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\": \"cfgFolder\" }"
+						},
+						"url": {
+							"raw": "{{protocol}}{{URL1}}{{port}}/v1/tenants/{{random}}/configurationFolders",
+							"host": [
+								"{{protocol}}{{URL1}}{{port}}"
+							],
+							"path": [
+								"v1",
+								"tenants",
+								"{{random}}",
+								"configurationFolders"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "1. Select the radio button of folder\r\n2.Click on \"Add File\"\r\n3. Upload the file \r\n4. Enter Any name \r\n5. Click on \"Upload File\" button\r\n",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "38ca81a9-edfb-4cef-9c59-320c8ba3174a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "128d5bad-461b-484b-aba5-c04b8085f8ca",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Varify by assigning the file",
+			"item": [
+				{
+					"name": "TC_N-01 | Configuration | LoginUser | It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "07e14825-0752-436b-96bd-aa4f47cab919",
+								"exec": [
+									"if (responseCode.code == 200)\r",
+									"{\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+									"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"AccessToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Token Type must  be Bearer\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access Token should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"refreshToken should conatin string\", function () {\r",
+									"    var jasondata =pm.response.json;\r",
+									"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\" refreshToken should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+									"    });\r",
+									"    pm.test(\" expiresTn should not be null \", function() {\r",
+									"     var jsondata = pm.response.json();\r",
+									"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+									"    });\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.response.to.have.status(200);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "grant_type",
+									"value": "{{Grant_type}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{clientId}}",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{superpassword}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"token"
+							]
+						},
+						"description": "Get Token when login with valid SuperAdmin credentials with token API"
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | Get Tennant| It should show 200 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d6547c94-b264-4d94-8489-3d0279866a33",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Tenant is enable/disable musbe in boolean object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].enabled).to.be.a('Boolean');",
+									"});",
+									"",
+									"",
+									"pm.test(\"TenantId must contain string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].name).to.be.a('string');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tenant name must contai string object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].properName).to.be.a('string');",
+									"});",
+									"/*pm.test(\"Tenant ingestionClusterId must contain Interger object\",function(){",
+									"    var jsondata= pm.response.json();",
+									"    pm.expect(jsondata[1].ingestionClusterId).to.be.a('integer');",
+									"});*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}{{url}}{{port}}/{{version}}/tenants",
+							"host": [
+								"{{protocol}}{{url}}{{port}}"
+							],
+							"path": [
+								"{{version}}",
+								"tenants"
+							]
+						},
+						"description": "If you want tenantid to run thr another api from teh collection you can get the tenantid for the particular tenant from this list and pass it to the environment variable.\nNote:Here tenant id is \"name\""
+					},
+					"response": []
+				},
+				{
+					"name": "TC_N-02 | Configuration | varify by assigning the file| It should show 201 status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fb84a4fb-a741-4f5d-b709-276855eb3197",
+								"exec": [
+									"if (responseCode.code == 404)\r",
+									"{\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"    pm.test(\"Status code is 404\", function(){\r",
+									"    pm.response.to.have.status(404)\r",
+									"});\r",
+									"    \r",
+									"pm.test(\"code should be contain  notFound \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.code).to.eql(\"notFound\");\r",
+									"});\r",
+									"pm.test(\"message should be contain  Not found \", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Not found\");\r",
+									"});\r",
+									"\r",
+									"}\r",
+									"else {\r",
+									"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+									"    pm.test(\"Status code is 400\", function () {\r",
+									"        pm.response.to.have.status(400);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\": \"cfgFolder\" }"
+						},
+						"url": {
+							"raw": "{{protocol}}{{URL1}}{{port}}/v1/tenants/{{random}}/configurationFolders",
+							"host": [
+								"{{protocol}}{{URL1}}{{port}}"
+							],
+							"path": [
+								"v1",
+								"tenants",
+								"{{random}}",
+								"configurationFolders"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "\r\n1. Select the radio button of folder \r\n2.click on \"\"File\"\" drop down. \r\n3.Select any file \r\n4. click on \"\"Assign active file\"\" on confirm Assign popup\"\r\n",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "7b72d7a6-37de-4088-8b30-471b4c3f90b0",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2233879d-96d7-4cc9-b32b-38ab5ab886bb",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

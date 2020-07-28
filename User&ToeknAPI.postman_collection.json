@@ -1,0 +1,1020 @@
+{
+	"info": {
+		"_postman_id": "9fe7dd1b-4257-4d15-8f53-1607921e4fc9",
+		"name": "User&ToeknAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test Case",
+			"item": [
+				{
+					"name": "TC_N-01 | User&ToeknAPI ",
+					"item": [
+						{
+							"name": "Token Api login sucessfull",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c9040890-8043-425b-9148-5393dd2081f7",
+										"exec": [
+											"if (responseCode.code == 200)\r",
+											"{\r",
+											"var jsonData = JSON.parse(responseBody);\r",
+											"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+											"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+											"\r",
+											"pm.test(\"Status code is 200\", function(){\r",
+											"    pm.response.to.have.status(200)\r",
+											"});\r",
+											"\r",
+											"\r",
+											"\r",
+											"pm.test(\"AccessToken should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Token Type must  be Bearer\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Access Token should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"refreshToken should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"pm.test(\" refreshToken should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+											"    });\r",
+											"    pm.test(\" expiresTn should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+											"    });\r",
+											"}\r",
+											"else {\r",
+											"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+											"    pm.test(\"Status code is 200\", function () {\r",
+											"        pm.response.to.have.status(200);\r",
+											"    });\r",
+											"}\r",
+											"\r",
+											"\r",
+											"\r",
+											"\r",
+											"\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "grant_type",
+											"value": "{{Grant_type}}",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{clientId}}",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{superpassword}}",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+									"host": [
+										"{{protocol}}{{url}}{{port}}"
+									],
+									"path": [
+										"{{version}}",
+										"token"
+									]
+								},
+								"description": "Get Token when login with valid SuperAdmin credentials with token API"
+							},
+							"response": []
+						},
+						{
+							"name": "Token API without password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c358e17f-ed3f-4dc8-bf5b-fd7702fb5da0",
+										"exec": [
+											"if (responseCode.code == 400)\r",
+											"{\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"    pm.test(\"Status code is 400\", function(){\r",
+											"    pm.response.to.have.status(400)\r",
+											"});\r",
+											"    \r",
+											"pm.test(\"Error should be contain  invalid_grant \", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error).to.eql(\"invalid_grant\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"error_description should be contain username or password is incorrect \", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error_description).to.eql(\"username or password is incorrect\");\r",
+											"});\r",
+											"pm.test(\"error should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.error).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"error should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.error).to.be.a('string');\r",
+											"});\r",
+											"pm.test(\"error_description should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.error_description).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"error_description should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.error_description).to.be.a('string');\r",
+											"});\r",
+											"}\r",
+											"else {\r",
+											"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+											"    pm.test(\"Status code is 400\", function () {\r",
+											"        pm.response.to.have.status(400);\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "grant_type",
+											"value": "{{Grant_type}}",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{clientId}}",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+									"host": [
+										"{{protocol}}{{url}}{{port}}"
+									],
+									"path": [
+										"{{version}}",
+										"token"
+									]
+								},
+								"description": "Get Token when login without Password in Token API"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Token API without username",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "926d6d9e-fec5-43e0-bd29-736ca694994c",
+										"exec": [
+											"if (responseCode.code == 400)\r",
+											"{\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"    pm.test(\"Status code is 400\", function(){\r",
+											"    pm.response.to.have.status(400)\r",
+											"});\r",
+											"    \r",
+											"pm.test(\"Error should be contain  invalid_grant \", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error).to.eql(\"invalid_grant\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"error_description should be contain username or password is incorrect \", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error_description).to.eql(\"username or password is incorrect\");\r",
+											"});\r",
+											"pm.test(\"error should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.error).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"error should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.error).to.be.a('string');\r",
+											"});\r",
+											"pm.test(\"error_description should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.error_description).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"error_description should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.error_description).to.be.a('string');\r",
+											"});\r",
+											"}\r",
+											"else {\r",
+											"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+											"    pm.test(\"Status code is 400\", function () {\r",
+											"        pm.response.to.have.status(400);\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "grant_type",
+											"value": "{{Grant_type}}",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{clientId}}",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+									"host": [
+										"{{protocol}}{{url}}{{port}}"
+									],
+									"path": [
+										"{{version}}",
+										"token"
+									]
+								},
+								"description": "Get Token when login  Without Username in Token API"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Token API without Client ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "abbaa881-e234-474b-8c6e-1b41c3790bfc",
+										"exec": [
+											"if (responseCode.code == 400)\r",
+											"{\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"    \r",
+											"    pm.test(\"Status code is 400\", function(){\r",
+											"    pm.response.to.have.status(400)\r",
+											"});\r",
+											"pm.test(\"Error should be contain  invalid_request \", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error).to.eql(\"invalid_request\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"error_description should be contain Client Id not a valid UUID \", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error_description).to.eql(\"Client Id not a valid UUID\");\r",
+											"});\r",
+											"pm.test(\"error should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.error).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"error should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.error).to.be.a('string');\r",
+											"});\r",
+											"pm.test(\"error_description should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.error_description).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"error_description should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.error_description).to.be.a('string');\r",
+											"});\r",
+											"}\r",
+											"else {\r",
+											"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+											"    pm.test(\"Status code is 400\", function () {\r",
+											"        pm.response.to.have.status(400);\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "grant_type",
+											"value": "{{Grant_type}}",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+									"host": [
+										"{{protocol}}{{url}}{{port}}"
+									],
+									"path": [
+										"{{version}}",
+										"token"
+									]
+								},
+								"description": "Get Token when login  Without Client Id in token API"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Token API with invalid client ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a41fc755-4e40-488c-82c3-6f9b7df9c28d",
+										"exec": [
+											"if (responseCode.code == 401)\r",
+											"{\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"    pm.test(\"Status code is 401\", function(){\r",
+											"    pm.response.to.have.status(401)\r",
+											"});\r",
+											"    \r",
+											"pm.test(\"Error should be contain  invalid_client \", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error).to.eql(\"invalid_client\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"error_description should be contain No client found for ID 0f1b01d3-36d2-4d28-9867-8e467c957b02 \", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error_description).to.eql(\"No client found for ID 0f1b01d3-36d2-4d28-9867-8e467c957b02.\");\r",
+											"});\r",
+											"pm.test(\"error should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.error).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"error should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.error).to.be.a('string');\r",
+											"});\r",
+											"pm.test(\"error_description should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.error_description).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"error_description should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.error_description).to.be.a('string');\r",
+											"});\r",
+											"}\r",
+											"else {\r",
+											"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+											"    pm.test(\"Status code is 400\", function () {\r",
+											"        pm.response.to.have.status(400);\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "grant_type",
+											"value": "{{Grant_type}}",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "0f1b01d3-36d2-4d28-9867-8e467c957b02",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+									"host": [
+										"{{protocol}}{{url}}{{port}}"
+									],
+									"path": [
+										"{{version}}",
+										"token"
+									]
+								},
+								"description": "Get Token with invalid client id in token API"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Token API with invalid grant_Type",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "c6456300-c2f0-46a1-96c6-86cb1454447f",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "b2878a11-dd35-452b-ba98-2138b6af1805",
+										"exec": [
+											"if (responseCode.code == 401)\r",
+											"{\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"    pm.test(\"Status code is 401\", function(){\r",
+											"    pm.response.to.have.status(401)\r",
+											"});\r",
+											"    \r",
+											"pm.test(\"Error should be contain  invalid_client \", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error).to.eql(\"invalid_client\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Invalid client or client is not authorized\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error_description).to.eql(\"Invalid client or client is not authorized\");\r",
+											"});\r",
+											"pm.test(\"error should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.error).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"error should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.error).to.be.a('string');\r",
+											"});\r",
+											"pm.test(\"error_description should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.error_description).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"error_description should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.error_description).to.be.a('string');\r",
+											"});\r",
+											"}\r",
+											"else {\r",
+											"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+											"    pm.test(\"Status code is 400\", function () {\r",
+											"        pm.response.to.have.status(400);\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "grant_type",
+											"value": "app",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{clientId}}",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+									"host": [
+										"{{protocol}}{{url}}{{port}}"
+									],
+									"path": [
+										"{{version}}",
+										"token"
+									]
+								},
+								"description": "Get Token with invalid grant_Type"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Token with Member  user Credentials",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1748b259-dc09-4fac-802b-9ddaed6f4628",
+										"exec": [
+											"if (responseCode.code == 200)\r",
+											"{\r",
+											"var jsonData = JSON.parse(responseBody);\r",
+											"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+											"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+											"\r",
+											"pm.test(\"Status code is 200\", function(){\r",
+											"    pm.response.to.have.status(200)\r",
+											"});\r",
+											"\r",
+											"\r",
+											"\r",
+											"pm.test(\"AccessToken should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Token Type must  be Bearer\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Access Token should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"refreshToken should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"pm.test(\" refreshToken should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+											"    });\r",
+											"    pm.test(\" expiresTn should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+											"    });\r",
+											"}\r",
+											"else {\r",
+											"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+											"    pm.test(\"Status code is 200\", function () {\r",
+											"        pm.response.to.have.status(200);\r",
+											"    });\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "grant_type",
+											"value": "{{Grant_type}}",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{clientId}}",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "{{memberusername}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{memberpassword}}",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+									"host": [
+										"{{protocol}}{{url}}{{port}}"
+									],
+									"path": [
+										"{{version}}",
+										"token"
+									]
+								},
+								"description": "Get Token with Member  user Credentials"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Token with tenantAdmin user credentials",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2149128e-c162-4524-91b8-d1e4d9e6aa80",
+										"exec": [
+											"if (responseCode.code == 200)\r",
+											"{\r",
+											"var jsonData = JSON.parse(responseBody);\r",
+											"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+											"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+											"\r",
+											"pm.test(\"Status code is 200\", function(){\r",
+											"    pm.response.to.have.status(200)\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"AccessToken should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Token Type must  be Bearer\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Access Token should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"refreshToken should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"pm.test(\" refreshToken should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+											"    });\r",
+											"    pm.test(\" expiresTn should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+											"    });\r",
+											"}\r",
+											"else {\r",
+											"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+											"    pm.test(\"Status code is 200\", function () {\r",
+											"        pm.response.to.have.status(200);\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "grant_type",
+											"value": "{{Grant_type}}",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{clientId}}",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "{{tenantusername}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{tenantpassword}}",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+									"host": [
+										"{{protocol}}{{url}}{{port}}"
+									],
+									"path": [
+										"{{version}}",
+										"token"
+									]
+								},
+								"description": "Get Token with tenantAdmin user credentials"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Token with readOnlyMember credentials",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "90bfc536-04c9-44df-9411-4b9c1fb85b94",
+										"exec": [
+											"if (responseCode.code == 200)\r",
+											"{\r",
+											"var jsonData = JSON.parse(responseBody);\r",
+											"postman.setEnvironmentVariable(\"token\", jsonData.accessToken);\r",
+											"tests[\"Token Set\"] = jsonData.accessToken === postman.getEnvironmentVariable(\"token\");\r",
+											"\r",
+											"pm.test(\"Status code is 200\", function(){\r",
+											"    pm.response.to.have.status(200)\r",
+											"});\r",
+											"\r",
+											"\r",
+											"\r",
+											"pm.test(\"AccessToken should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.accessToken).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Token Type must  be Bearer\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.tokenType).to.eql(\"Bearer\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Access Token should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.accessToken).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"refreshToken should conatin string\", function () {\r",
+											"    var jasondata =pm.response.json;\r",
+											"    pm.expect(jsonData.refreshToken).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"pm.test(\" refreshToken should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.refreshToken).not.eql(null);\r",
+											"    });\r",
+											"    pm.test(\" expiresTn should not be null \", function() {\r",
+											"     var jsondata = pm.response.json();\r",
+											"    pm.expect(jsonData.expiresIn).not.eql(null);\r",
+											"    });\r",
+											"}\r",
+											"else {\r",
+											"    console.log(\"Something went wrong, please check the service logs for the root cause of failure.\");\r",
+											"    pm.test(\"Status code is 200\", function () {\r",
+											"        pm.response.to.have.status(200);\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "grant_type",
+											"value": "{{Grant_type}}",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{clientId}}",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "{{readOnlyMemberusername}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{readOnlyPassword}}",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{protocol}}{{url}}{{port}}/{{version}}/token",
+									"host": [
+										"{{protocol}}{{url}}{{port}}"
+									],
+									"path": [
+										"{{version}}",
+										"token"
+									]
+								},
+								"description": "Get Token with readOnlyMember credentials"
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "556d69a6-30fa-4c14-a1d5-0de410df0d0a",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "62dceaa1-0f12-457e-960f-c706a1baa6ae",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
